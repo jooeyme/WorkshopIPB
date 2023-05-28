@@ -26,7 +26,15 @@ function addNewTodo() {
   setTodos(updatedTodos)
   setNewTodo('')
 }
-
+function completeTodo(targetTodoId) {
+  const updatedTodos = todos.map(todo => {
+    if (todo.id == targetTodoId) {
+      todo.isCompleted = !todo.isCompleted
+    }
+    return todo
+  })
+  setTodos(updatedTodos)
+}
   return(
     <>
       <h1>Todo App</h1>
@@ -39,8 +47,11 @@ function addNewTodo() {
         <ul>
           {
             todos.map(todo => (
-              <li key={todo.id} className='todo-item'>
-                <input type='checkbox'/>
+              <li key={todo.id} className='todo-item' 
+              style={{textDecoration: todo.isCompleted ? 'line-trhough' : 'none' 
+              }}
+              >
+                <input type='checkbox' onChange={() => completeTodo(todo.id)}/>
                 {todo.title}</li>
 
             ))
