@@ -11,21 +11,25 @@ const DUMMY_TODO = [
 ]
 
 function App() {
-const [todos, setTodos] = useState(DUMMY_TODO)
-const [newTodo, setNewTodo] = useState('')
+  const [todos, setTodos] = useState(DUMMY_TODO)
+  const [newTodo, setNewTodo] = useState('')
+  const [error, setError] = useState('')
 
 function addNewTodo() {
-  const updatedTodos = [...todos]
-  const objTodo = {
-    id: nanoid(),
-    title: newTodo,
-    isCompleted: false
-  }
+  if (newTodo.length === 0) {
+    setError('data kosong')
+  } else {
+    const updatedTodos = [...todos]
+    const objTodo = {
+      id: nanoid(),
+      title: newTodo,
+      isCompleted: false
+    }
 
   updatedTodos.push(objTodo)
   setTodos(updatedTodos)
   setNewTodo('')
-}
+  }}
 function completeTodo(targetTodoId) {
   const updatedTodos = todos.map(todo => {
     if (todo.id == targetTodoId) {
@@ -35,24 +39,34 @@ function completeTodo(targetTodoId) {
   })
   setTodos(updatedTodos)
 }
+
+function handleChange(event){
+  setNewTodo(event.target.value)
+  setError('')
+}
   return(
     <>
       <h1>Todo App</h1>
       <input type='text' 
       placeholder='Isi todo di sini' 
       value={newTodo}
-      onChange={event => setNewTodo(event.target.value)}
+      onChange={event => handleChange(event)}
       />
       <button onClick={() => addNewTodo()}>Create</button>
+      {
+        error.length > 0 ? (
+          <p style={{color: 'red'}}> {error}</p>
+        ) : null
+      }
         <ul>
           {
             todos.map(todo => (
               <li key={todo.id} className='todo-item' 
-              style={{textDecoration: todo.isCompleted ? 'line-trhough' : 'none' 
-              }}
-              >
+              style={{textDecoration: todo.isCompleted ? 'line-through' : 'none'}}>
                 <input type='checkbox' onChange={() => completeTodo(todo.id)}/>
-                {todo.title}</li>
+                <p>{todo.title}</p>
+                <button style={{marginLeft: '16px'}}>X</button>
+                </li>
 
             ))
           }
